@@ -95,7 +95,12 @@
     loop = requestAnimationFrame(tick);
   }
 
-  document.getElementById('shooting-start').addEventListener('click', start);
-  document.getElementById('shooting-restart').addEventListener('click', start);
-  document.getElementById('shooting-overlay-restart').addEventListener('click', () => { overlay.style.display = 'none'; start(); });
+  function bindBtnTouch(el, fn) {
+    if (!el) return;
+    el.addEventListener('click', fn);
+    el.addEventListener('touchend', function (e) { e.preventDefault(); fn(); }, { passive: false });
+  }
+  bindBtnTouch(document.getElementById('shooting-start'), start);
+  bindBtnTouch(document.getElementById('shooting-restart'), start);
+  bindBtnTouch(document.getElementById('shooting-overlay-restart'), () => { overlay.style.display = 'none'; start(); });
 })();

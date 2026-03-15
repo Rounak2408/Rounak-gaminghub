@@ -162,9 +162,14 @@
     gameLoop = requestAnimationFrame(tick);
   }
 
-  document.getElementById('countmasters-start').addEventListener('click', start);
-  document.getElementById('countmasters-restart').addEventListener('click', start);
-  document.getElementById('countmasters-overlay-restart').addEventListener('click', function () {
+  function bindBtnTouch(el, fn) {
+    if (!el) return;
+    el.addEventListener('click', fn);
+    el.addEventListener('touchend', function (e) { e.preventDefault(); fn(); }, { passive: false });
+  }
+  bindBtnTouch(document.getElementById('countmasters-start'), start);
+  bindBtnTouch(document.getElementById('countmasters-restart'), start);
+  bindBtnTouch(document.getElementById('countmasters-overlay-restart'), function () {
     if (overlay) overlay.style.display = 'none';
     start();
   });

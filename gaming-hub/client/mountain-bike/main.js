@@ -130,6 +130,8 @@
     document.getElementById('game-menu').style.display = 'none';
     document.getElementById('game-ui').style.display = 'block';
     document.getElementById('game-canvas-wrap').style.display = 'block';
+    var tc = document.getElementById('touch-controls');
+    if (tc && window.matchMedia('(max-width: 768px)').matches) tc.classList.add('active');
     score = 0;
     var startY = terrainData.height(0, 0) + 0.6;
     controller.position.set(0, startY, 0);
@@ -231,14 +233,57 @@
     });
   })();
 
-  window.addEventListener('resize', function () {
+  function onResize() {
     if (!camera || !renderer) return;
-    camera.aspect = window.innerWidth / window.innerHeight;
+    var wrap = document.getElementById('game-canvas-wrap');
+    var w = (wrap && wrap.offsetWidth) ? wrap.offsetWidth : window.innerWidth;
+    var h = (wrap && wrap.offsetHeight) ? wrap.offsetHeight : window.innerHeight;
+    if (w <= 0) w = window.innerWidth;
+    if (h <= 0) h = window.innerHeight;
+    camera.aspect = w / h;
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  });
+    renderer.setSize(w, h);
+  }
+
+  window.addEventListener('resize', onResize);
+  var wrapEl = document.getElementById('game-canvas-wrap');
+  if (wrapEl && typeof ResizeObserver !== 'undefined') {
+    var ro = new ResizeObserver(function () { onResize(); });
+    ro.observe(wrapEl);
+  }
+
+  (function setupTouchControls() {
+    var tc = document.getElementById('touch-controls');
+    if (!tc) return;
+    var actionMap = { forward: 'forward', left: 'left', right: 'right', jump: 'jump' };
+    ['touchstart', 'touchmove', 'touchend', 'touchcancel'].forEach(function (ev) {
+      tc.addEventListener(ev, function (e) {
+        e.preventDefault();
+        var touch = e.changedTouches && e.changedTouches[0] ? e.changedTouches[0] : (e.touches && e.touches[0] ? e.touches[0] : null);
+        if (!touch) return;
+        var el = document.elementFromPoint(touch.clientX, touch.clientY);
+        if (!el || !el.classList || !el.classList.contains('touch-zone')) {
+          if (ev === 'touchend' || ev === 'touchcancel') keys.forward = keys.left = keys.right = keys.jump = false;
+          return;
+        }
+        var action = el.dataset.action;
+        if (!action) return;
+        if (ev === 'touchstart' || ev === 'touchmove') {
+          keys.forward = keys.left = keys.right = keys.jump = false;
+          if (action === 'forward') keys.forward = true;
+          if (action === 'left') keys.left = true;
+          if (action === 'right') keys.right = true;
+          if (action === 'jump') keys.jump = true;
+        } else {
+          keys.forward = keys.left = keys.right = keys.jump = false;
+        }
+      }, { passive: false });
+    });
+  })();
 
   initScene();
   initTerrain();
   initBike();
+  onResize();
+  setTimeout(onResize, 100);
 })();

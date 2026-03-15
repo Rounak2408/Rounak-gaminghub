@@ -43,7 +43,7 @@
       cell.className = 'ttt-cell' + (board[i] ? ' taken' : '');
       cell.textContent = board[i];
       cell.dataset.index = i;
-      cell.addEventListener('click', () => {
+      function cellTap() {
         if (!gameActive || board[i]) return;
         if (onlineMode && !isMyTurn()) return;
         board[i] = currentPlayer;
@@ -65,7 +65,9 @@
           currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
           if (turnMsgEl) turnMsgEl.textContent = onlineMode ? (isMyTurn() ? 'Your turn' : "Opponent's turn") : '';
         }
-      });
+      }
+      cell.addEventListener('click', cellTap);
+      cell.addEventListener('touchend', function (e) { e.preventDefault(); cellTap(); }, { passive: false });
       boardEl.appendChild(cell);
     }
     if (scoreEl) scoreEl.textContent = wins;
@@ -238,15 +240,27 @@
     });
   }
 
-  document.getElementById('ttt-start').addEventListener('click', start);
-  document.getElementById('ttt-restart').addEventListener('click', restart);
-  document.getElementById('ttt-overlay-restart').addEventListener('click', () => { overlay.style.display = 'none'; start(); });
+  function bindBtnTouch(el, fn) {
+    if (!el) return;
+    el.addEventListener('click', fn);
+    el.addEventListener('touchend', function (e) { e.preventDefault(); fn(); }, { passive: false });
+  }
+  bindBtnTouch(document.getElementById('ttt-start'), start);
+  bindBtnTouch(document.getElementById('ttt-restart'), restart);
+  bindBtnTouch(document.getElementById('ttt-overlay-restart'), function () { overlay.style.display = 'none'; start(); });
 
   var hubToastOk = document.getElementById('hub-toast-ok');
-  if (hubToastOk) hubToastOk.addEventListener('click', function () {
-    var el = document.getElementById('hub-toast');
-    if (el) { el.style.display = 'none'; el.setAttribute('aria-hidden', 'true'); }
-  });
+  if (hubToastOk) {
+    hubToastOk.addEventListener('click', function () {
+      var el = document.getElementById('hub-toast');
+      if (el) { el.style.display = 'none'; el.setAttribute('aria-hidden', 'true'); }
+    });
+    hubToastOk.addEventListener('touchend', function (e) {
+      e.preventDefault();
+      var el = document.getElementById('hub-toast');
+      if (el) { el.style.display = 'none'; el.setAttribute('aria-hidden', 'true'); }
+    }, { passive: false });
+  }
 
   setupOnline();
   render();

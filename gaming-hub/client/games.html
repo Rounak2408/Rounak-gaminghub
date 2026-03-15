@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Games - Mini Games Hub</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -336,12 +336,12 @@
         </section>
 
         <!-- 9. Mountain Bike (3D - external) -->
-        <section class="game-section" id="mountain-bike" style="display: none;">
-          <h2 style="font-family: var(--font-display); color: var(--neon-cyan); margin-bottom: 1rem;">Mountain Bike – Downhill Ride</h2>
-          <div class="game-container" style="max-width: 900px;">
-            <p style="color: var(--text-muted); margin-bottom: 0.5rem;">W/Up: forward · A/D: turn · Space: jump. Choose Mountain Ride or Free Ride from the in-game menu.</p>
-            <div class="game-screen-wrap" style="aspect-ratio: 16/10; min-height: 400px; background: #0a0a0f; border-radius: 8px; overflow: hidden;">
-              <iframe id="mountain-bike-iframe" src="mountain-bike/index.html" style="width:100%; height:100%; border: none;" title="Mountain Bike Game"></iframe>
+        <section class="game-section game-section-mountain-bike" id="mountain-bike" style="display: none;">
+          <h2 class="game-section-mountain-bike-title">Mountain Bike – Downhill Ride</h2>
+          <div class="game-container game-container-mountain-bike">
+            <p class="game-section-mountain-bike-hint">W/Up: forward · A/D: turn · Space: jump. Choose Mountain Ride or Free Ride from the in-game menu.</p>
+            <div class="game-screen-wrap game-screen-wrap-mountain-bike">
+              <iframe id="mountain-bike-iframe" src="mountain-bike/index.html" title="Mountain Bike Game"></iframe>
             </div>
           </div>
         </section>

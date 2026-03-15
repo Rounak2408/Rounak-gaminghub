@@ -115,10 +115,18 @@
     loop = requestAnimationFrame(tick);
   }
 
-  document.getElementById('adventure-start').addEventListener('click', start);
-  document.getElementById('adventure-restart').addEventListener('click', start);
-  document.getElementById('adventure-overlay-restart').addEventListener('click', () => { overlay.style.display = 'none'; start(); });
+  function bindBtnTouch(el, fn) {
+    if (!el) return;
+    el.addEventListener('click', fn);
+    el.addEventListener('touchend', function (e) { e.preventDefault(); fn(); }, { passive: false });
+  }
+  bindBtnTouch(document.getElementById('adventure-start'), start);
+  bindBtnTouch(document.getElementById('adventure-restart'), start);
+  bindBtnTouch(document.getElementById('adventure-overlay-restart'), function () { overlay.style.display = 'none'; start(); });
 
+  function doJump() {
+    if (running && player.vy === 0) player.vy = jump;
+  }
   var advLeft = document.getElementById('adventure-left');
   var advRight = document.getElementById('adventure-right');
   var advJump = document.getElementById('adventure-jump');
@@ -126,23 +134,46 @@
     advLeft.addEventListener('mousedown', () => keys.left = true);
     advLeft.addEventListener('mouseup', () => keys.left = false);
     advLeft.addEventListener('mouseleave', () => keys.left = false);
-    advLeft.addEventListener('touchstart', (e) => { e.preventDefault(); keys.left = true; });
-    advLeft.addEventListener('touchend', (e) => { e.preventDefault(); keys.left = false; });
+    advLeft.addEventListener('touchstart', (e) => { e.preventDefault(); keys.left = true; }, { passive: false });
+    advLeft.addEventListener('touchend', (e) => { e.preventDefault(); keys.left = false; }, { passive: false });
   }
   if (advRight) {
     advRight.addEventListener('mousedown', () => keys.right = true);
     advRight.addEventListener('mouseup', () => keys.right = false);
     advRight.addEventListener('mouseleave', () => keys.right = false);
-    advRight.addEventListener('touchstart', (e) => { e.preventDefault(); keys.right = true; });
-    advRight.addEventListener('touchend', (e) => { e.preventDefault(); keys.right = false; });
+    advRight.addEventListener('touchstart', (e) => { e.preventDefault(); keys.right = true; }, { passive: false });
+    advRight.addEventListener('touchend', (e) => { e.preventDefault(); keys.right = false; }, { passive: false });
   }
   if (advJump) {
-    advJump.addEventListener('click', function () {
-      if (running && player.vy === 0) player.vy = jump;
-    });
-    advJump.addEventListener('touchend', function (e) {
-      e.preventDefault();
-      if (running && player.vy === 0) player.vy = jump;
-    });
+    advJump.addEventListener('click', doJump);
+    advJump.addEventListener('touchend', function (e) { e.preventDefault(); doJump(); }, { passive: false });
   }
+
+  function getCanvasTouch(e) {
+    var rect = canvas.getBoundingClientRect();
+    var x = (e.touches && e.touches[0] ? e.touches[0].clientX : e.clientX) - rect.left;
+    var y = (e.touches && e.touches[0] ? e.touches[0].clientY : e.clientY) - rect.top;
+    return { x: x / rect.width, y: y / rect.height };
+  }
+  function onCanvasTouch(e) {
+    var p = getCanvasTouch(e);
+    if (p.x < 0.33) keys.left = true;
+    else if (p.x > 0.66) keys.right = true;
+    else doJump();
+  }
+  function onCanvasTouchEnd(e) {
+    keys.left = false;
+    keys.right = false;
+  }
+  canvas.addEventListener('touchstart', function (e) {
+    e.preventDefault();
+    onCanvasTouch(e);
+  }, { passive: false });
+  canvas.addEventListener('touchend', function (e) {
+    e.preventDefault();
+    onCanvasTouchEnd(e);
+  }, { passive: false });
+  canvas.addEventListener('click', function (e) {
+    if (e.target === canvas) onCanvasTouch(e);
+  });
 })();

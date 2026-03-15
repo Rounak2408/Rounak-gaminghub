@@ -136,20 +136,58 @@
     handleKey(e);
   });
 
-  document.getElementById('snake-start').addEventListener('click', start);
-  document.getElementById('snake-restart').addEventListener('click', start);
-  document.getElementById('snake-overlay-restart').addEventListener('click', () => { overlay.style.display = 'none'; start(); });
+  function bindBtnTouch(el, fn) {
+    if (!el) return;
+    el.addEventListener('click', fn);
+    el.addEventListener('touchend', function (e) { e.preventDefault(); fn(); }, { passive: false });
+  }
+  bindBtnTouch(document.getElementById('snake-start'), start);
+  bindBtnTouch(document.getElementById('snake-restart'), start);
+  bindBtnTouch(document.getElementById('snake-overlay-restart'), function () { overlay.style.display = 'none'; start(); });
 
+  function setDir(dx, dy) {
+    if (!running) return;
+    if (dx === -1 && dir.x !== 1) dir = { x: -1, y: 0 };
+    if (dx === 1 && dir.x !== -1) dir = { x: 1, y: 0 };
+    if (dy === -1 && dir.y !== 1) dir = { x: 0, y: -1 };
+    if (dy === 1 && dir.y !== -1) dir = { x: 0, y: 1 };
+  }
   ['snake-up', 'snake-down', 'snake-left', 'snake-right'].forEach(function (id) {
     var el = document.getElementById(id);
     if (!el) return;
-    el.addEventListener('click', function () {
-      if (!running) return;
-      if (id === 'snake-up' && dir.y !== 1) dir = { x: 0, y: -1 };
-      if (id === 'snake-down' && dir.y !== -1) dir = { x: 0, y: 1 };
-      if (id === 'snake-left' && dir.x !== 1) dir = { x: -1, y: 0 };
-      if (id === 'snake-right' && dir.x !== -1) dir = { x: 1, y: 0 };
-    });
-    el.addEventListener('touchend', function (e) { e.preventDefault(); });
+    var fn = function () {
+      if (id === 'snake-up') setDir(0, -1);
+      if (id === 'snake-down') setDir(0, 1);
+      if (id === 'snake-left') setDir(-1, 0);
+      if (id === 'snake-right') setDir(1, 0);
+    };
+    el.addEventListener('click', fn);
+    el.addEventListener('touchend', function (e) { e.preventDefault(); fn(); }, { passive: false });
+  });
+
+  function getCanvasTouch(e) {
+    var rect = canvas.getBoundingClientRect();
+    var x = (e.touches && e.touches[0] ? e.touches[0].clientX : e.clientX) - rect.left;
+    var y = (e.touches && e.touches[0] ? e.touches[0].clientY : e.clientY) - rect.top;
+    var scaleX = canvas.width / rect.width;
+    var scaleY = canvas.height / rect.height;
+    return { x: x * scaleX, y: y * scaleY };
+  }
+  function onCanvasTouch(e) {
+    var p = getCanvasTouch(e);
+    var w = canvas.width;
+    var h = canvas.height;
+    if (p.y < h * 0.33) setDir(0, -1);
+    else if (p.y > h * 0.66) setDir(0, 1);
+    else if (p.x < w * 0.33) setDir(-1, 0);
+    else if (p.x > w * 0.66) setDir(1, 0);
+  }
+  canvas.addEventListener('touchstart', function (e) {
+    e.preventDefault();
+    onCanvasTouch(e);
+  }, { passive: false });
+  canvas.addEventListener('touchend', function (e) { e.preventDefault(); }, { passive: false });
+  canvas.addEventListener('click', function (e) {
+    if (e.target === canvas) onCanvasTouch(e);
   });
 })();

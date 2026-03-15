@@ -88,22 +88,46 @@
   }
 
   document.addEventListener('keydown', keyHandler);
-  document.getElementById('racing-start').addEventListener('click', start);
-  document.getElementById('racing-restart').addEventListener('click', start);
-  document.getElementById('racing-overlay-restart').addEventListener('click', () => { overlay.style.display = 'none'; start(); });
 
+  function bindBtnTouch(el, fn) {
+    if (!el) return;
+    el.addEventListener('click', fn);
+    el.addEventListener('touchend', function (e) { e.preventDefault(); fn(); }, { passive: false });
+  }
+  bindBtnTouch(document.getElementById('racing-start'), start);
+  bindBtnTouch(document.getElementById('racing-restart'), start);
+  bindBtnTouch(document.getElementById('racing-overlay-restart'), function () { overlay.style.display = 'none'; start(); });
+
+  function moveLeft() {
+    if (running) playerX = Math.max(canvas.width / 2 - roadW, playerX - 8);
+  }
+  function moveRight() {
+    if (running) playerX = Math.min(canvas.width / 2 + roadW - carW, playerX + 8);
+  }
   var racingLeft = document.getElementById('racing-left');
   var racingRight = document.getElementById('racing-right');
   if (racingLeft) {
-    racingLeft.addEventListener('click', function () {
-      if (running) playerX = Math.max(canvas.width / 2 - roadW, playerX - 8);
-    });
-    racingLeft.addEventListener('touchend', function (e) { e.preventDefault(); });
+    racingLeft.addEventListener('click', moveLeft);
+    racingLeft.addEventListener('touchend', function (e) { e.preventDefault(); moveLeft(); }, { passive: false });
   }
   if (racingRight) {
-    racingRight.addEventListener('click', function () {
-      if (running) playerX = Math.min(canvas.width / 2 + roadW - carW, playerX + 8);
-    });
-    racingRight.addEventListener('touchend', function (e) { e.preventDefault(); });
+    racingRight.addEventListener('click', moveRight);
+    racingRight.addEventListener('touchend', function (e) { e.preventDefault(); moveRight(); }, { passive: false });
   }
+
+  function getCanvasTouch(e) {
+    var rect = canvas.getBoundingClientRect();
+    var x = (e.touches && e.touches[0] ? e.touches[0].clientX : e.clientX) - rect.left;
+    return x / rect.width;
+  }
+  function onCanvasTouch(e) {
+    var ratio = getCanvasTouch(e);
+    if (ratio < 0.5) moveLeft();
+    else moveRight();
+  }
+  canvas.addEventListener('touchstart', function (e) {
+    e.preventDefault();
+    onCanvasTouch(e);
+  }, { passive: false });
+  canvas.addEventListener('click', function (e) { if (e.target === canvas) onCanvasTouch(e); });
 })();

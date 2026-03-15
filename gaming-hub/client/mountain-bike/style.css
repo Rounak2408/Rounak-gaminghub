@@ -4,24 +4,38 @@
   box-sizing: border-box;
 }
 
+html {
+  overflow: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   font-family: 'Segoe UI', system-ui, sans-serif;
   background: #0a0a0f;
   color: #e8e8f0;
   overflow: hidden;
   min-height: 100vh;
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 #game-canvas {
   display: block;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
 }
 
 #game-canvas-wrap {
   position: fixed;
   inset: 0;
   z-index: 1;
+  top: env(safe-area-inset-top);
+  left: env(safe-area-inset-left);
+  right: env(safe-area-inset-right);
+  bottom: env(safe-area-inset-bottom);
+  touch-action: none;
 }
 
 /* ===== Game Menu (MX Offroad style) ===== */
@@ -33,6 +47,9 @@ body {
   align-items: center;
   justify-content: center;
   background: linear-gradient(180deg, #0a0a0f 0%, #12121a 50%, #0a0a0f 100%);
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 #game-menu::before {
@@ -46,6 +63,10 @@ body {
 .menu-content {
   text-align: center;
   z-index: 2;
+  width: 100%;
+  max-width: 360px;
+  padding: 0 1rem;
+  box-sizing: border-box;
 }
 
 .menu-title {
@@ -57,6 +78,10 @@ body {
   background-clip: text;
   margin-bottom: 0.25rem;
   letter-spacing: 0.05em;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  line-height: 1.15;
 }
 
 .menu-subtitle {
@@ -70,13 +95,17 @@ body {
   flex-direction: column;
   gap: 1rem;
   align-items: center;
+  width: 100%;
+  max-width: 100%;
 }
 
 .menu-btn {
   font-size: 1.1rem;
   font-weight: 600;
   padding: 1rem 2.5rem;
-  min-width: 240px;
+  min-width: 200px;
+  max-width: 100%;
+  min-height: 48px;
   border: none;
   border-radius: 12px;
   cursor: pointer;
@@ -84,6 +113,9 @@ body {
   background: linear-gradient(135deg, #00f5ff, #0088aa);
   color: #0a0a0f;
   box-shadow: 0 0 25px rgba(0, 245, 255, 0.3);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
 }
 
 .menu-btn:hover {
@@ -189,4 +221,171 @@ body {
 
 #btn-pause:hover {
   background: rgba(0, 245, 255, 0.2);
+}
+
+#btn-pause:active {
+  background: rgba(0, 245, 255, 0.25);
+}
+
+/* ===== Mobile responsive ===== */
+@media (max-width: 768px) {
+  #game-menu {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    align-items: center;
+    justify-content: center;
+  }
+  .menu-content {
+    width: 100%;
+    max-width: min(360px, calc(100vw - 2rem));
+    padding: 0 1rem;
+    margin: 0 auto;
+  }
+  .menu-title {
+    font-size: clamp(1.15rem, 6vw, 2rem);
+    margin-bottom: 0.2rem;
+    letter-spacing: 0.02em;
+  }
+  .menu-subtitle {
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+  }
+  .menu-buttons {
+    gap: 0.75rem;
+    width: 100%;
+  }
+  .menu-btn {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: 0.9rem 1rem;
+    font-size: 0.95rem;
+    min-height: 48px;
+  }
+  .multiplayer-panel .room-code {
+    font-size: 1.25rem;
+    letter-spacing: 0.15em;
+    word-break: break-all;
+  }
+  .room-code-input {
+    max-width: 100%;
+    font-size: 1rem;
+    padding: 0.85rem;
+    min-height: 48px;
+    box-sizing: border-box;
+  }
+  #game-ui {
+    padding: max(0.75rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) 1rem max(1rem, env(safe-area-inset-left));
+  }
+  #btn-pause {
+    top: max(0.75rem, env(safe-area-inset-top));
+    right: max(1rem, env(safe-area-inset-right));
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    min-height: 48px;
+  }
+  .hud-score {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .menu-content {
+    padding: 0 1.25rem;
+    max-width: min(360px, calc(100vw - 2.5rem));
+  }
+  .menu-title {
+    font-size: clamp(1rem, 8vw, 1.5rem);
+    letter-spacing: 0;
+  }
+  .menu-subtitle {
+    font-size: 0.9rem;
+    margin-bottom: 1.25rem;
+  }
+  .menu-btn {
+    min-height: 48px;
+    padding: 0.85rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* When game runs inside small iframe (e.g. hub on mobile) */
+@media (max-width: 400px) {
+  .menu-content {
+    max-width: calc(100vw - 2rem);
+    padding: 0 0.75rem;
+  }
+  .menu-title {
+    font-size: 1.1rem;
+  }
+  .menu-btn {
+    padding: 0.75rem 0.75rem;
+  }
+}
+
+/* ===== Touch control overlay (shown on mobile when game running) ===== */
+#touch-controls {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+#touch-controls .touch-zone {
+  position: absolute;
+  pointer-events: auto;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#touch-controls .touch-forward {
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0;
+  width: 35%;
+  height: 28%;
+  max-width: 160px;
+}
+
+#touch-controls .touch-left {
+  left: 0;
+  bottom: 0;
+  width: 28%;
+  height: 40%;
+  max-width: 120px;
+}
+
+#touch-controls .touch-right {
+  right: 0;
+  bottom: 0;
+  width: 28%;
+  height: 40%;
+  max-width: 120px;
+}
+
+#touch-controls .touch-jump {
+  right: 12%;
+  bottom: 15%;
+  width: 22%;
+  height: 22%;
+  max-width: 100px;
+  max-height: 100px;
+  border-radius: 50%;
+  background: rgba(0, 245, 255, 0.2);
+  border: 2px solid rgba(0, 245, 255, 0.6);
+}
+
+@media (max-width: 768px) {
+  #touch-controls.active {
+    display: block;
+  }
+}
+
+@media (min-width: 769px) {
+  #touch-controls {
+    display: none !important;
+  }
 }

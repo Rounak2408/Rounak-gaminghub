@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Mountain Bike - Downhill Ride</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -45,6 +45,13 @@
       <div class="hud-score">Distance: <span id="score-value">0</span> m</div>
     </div>
     <button type="button" id="btn-pause">II</button>
+  </div>
+
+  <div id="touch-controls" aria-hidden="true">
+    <div class="touch-zone touch-forward" id="touch-forward" data-action="forward"></div>
+    <div class="touch-zone touch-left" id="touch-left" data-action="left"></div>
+    <div class="touch-zone touch-right" id="touch-right" data-action="right"></div>
+    <div class="touch-zone touch-jump" id="touch-jump" data-action="jump"></div>
   </div>
 
   <div id="game-canvas-wrap" style="display: none;">

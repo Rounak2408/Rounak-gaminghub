@@ -45,11 +45,17 @@
     start();
   }
 
+  function bindBtnTouch(el, fn) {
+    if (!el) return;
+    el.addEventListener('click', fn);
+    el.addEventListener('touchend', function (e) { e.preventDefault(); fn(); }, { passive: false });
+  }
   choicesEl.querySelectorAll('.rps-btn').forEach(btn => {
-    btn.addEventListener('click', () => play(btn.dataset.choice));
+    var choice = btn.dataset.choice;
+    btn.addEventListener('click', () => play(choice));
+    btn.addEventListener('touchend', function (e) { e.preventDefault(); play(choice); }, { passive: false });
   });
-
-  document.getElementById('rps-start').addEventListener('click', start);
-  document.getElementById('rps-restart').addEventListener('click', restart);
-  document.getElementById('rps-overlay-restart').addEventListener('click', () => { overlay.style.display = 'none'; start(); });
+  bindBtnTouch(document.getElementById('rps-start'), start);
+  bindBtnTouch(document.getElementById('rps-restart'), restart);
+  bindBtnTouch(document.getElementById('rps-overlay-restart'), () => { overlay.style.display = 'none'; start(); });
 })();

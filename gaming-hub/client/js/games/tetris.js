@@ -199,20 +199,41 @@
     else if (k === ' ') { e.preventDefault(); hardDrop(); }
   });
 
-  var tetrisStart = document.getElementById('tetris-start');
-  var tetrisRestart = document.getElementById('tetris-restart');
-  if (tetrisStart) tetrisStart.addEventListener('click', start);
-  if (tetrisRestart) tetrisRestart.addEventListener('click', start);
-  var overlayRestart = document.getElementById('tetris-overlay-restart');
-  if (overlayRestart) overlayRestart.addEventListener('click', function () { if (overlay) overlay.style.display = 'none'; start(); });
+  function bindBtnTouch(el, fn) {
+    if (!el) return;
+    el.addEventListener('click', function (e) { e.preventDefault(); fn(); });
+    el.addEventListener('touchend', function (e) { e.preventDefault(); fn(); }, { passive: false });
+  }
+  bindBtnTouch(document.getElementById('tetris-start'), start);
+  bindBtnTouch(document.getElementById('tetris-restart'), start);
+  bindBtnTouch(document.getElementById('tetris-overlay-restart'), function () { if (overlay) overlay.style.display = 'none'; start(); });
 
   function bindMobileBtn(id, fn) {
     var el = document.getElementById(id);
     if (!el) return;
     el.addEventListener('click', function (e) { e.preventDefault(); fn(); });
+    el.addEventListener('touchend', function (e) { e.preventDefault(); fn(); }, { passive: false });
   }
   bindMobileBtn('tetris-left', function () { move(-1); });
   bindMobileBtn('tetris-right', function () { move(1); });
   bindMobileBtn('tetris-rotate', rotate);
   bindMobileBtn('tetris-drop', hardDrop);
+
+  function getCanvasTouch(e) {
+    var rect = canvas.getBoundingClientRect();
+    var x = (e.touches && e.touches[0] ? e.touches[0].clientX : e.clientX) - rect.left;
+    return x / rect.width;
+  }
+  function onCanvasTouch(e) {
+    var r = getCanvasTouch(e);
+    if (r < 0.25) move(-1);
+    else if (r < 0.5) rotate();
+    else if (r < 0.75) move(1);
+    else hardDrop();
+  }
+  canvas.addEventListener('touchstart', function (e) {
+    e.preventDefault();
+    onCanvasTouch(e);
+  }, { passive: false });
+  canvas.addEventListener('click', function (e) { if (e.target === canvas) onCanvasTouch(e); });
 })();
