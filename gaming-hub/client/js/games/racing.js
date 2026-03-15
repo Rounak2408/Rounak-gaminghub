@@ -91,4 +91,19 @@
   document.getElementById('racing-start').addEventListener('click', start);
   document.getElementById('racing-restart').addEventListener('click', start);
   document.getElementById('racing-overlay-restart').addEventListener('click', () => { overlay.style.display = 'none'; start(); });
+
+  var racingLeft = document.getElementById('racing-left');
+  var racingRight = document.getElementById('racing-right');
+  if (racingLeft) {
+    racingLeft.addEventListener('click', function () {
+      if (running) playerX = Math.max(canvas.width / 2 - roadW, playerX - 8);
+    });
+    racingLeft.addEventListener('touchend', function (e) { e.preventDefault(); });
+  }
+  if (racingRight) {
+    racingRight.addEventListener('click', function () {
+      if (running) playerX = Math.min(canvas.width / 2 + roadW - carW, playerX + 8);
+    });
+    racingRight.addEventListener('touchend', function (e) { e.preventDefault(); });
+  }
 })();

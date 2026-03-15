@@ -205,4 +205,14 @@
   if (tetrisRestart) tetrisRestart.addEventListener('click', start);
   var overlayRestart = document.getElementById('tetris-overlay-restart');
   if (overlayRestart) overlayRestart.addEventListener('click', function () { if (overlay) overlay.style.display = 'none'; start(); });
+
+  function bindMobileBtn(id, fn) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('click', function (e) { e.preventDefault(); fn(); });
+  }
+  bindMobileBtn('tetris-left', function () { move(-1); });
+  bindMobileBtn('tetris-right', function () { move(1); });
+  bindMobileBtn('tetris-rotate', rotate);
+  bindMobileBtn('tetris-drop', hardDrop);
 })();

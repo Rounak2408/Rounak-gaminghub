@@ -159,6 +159,14 @@
       <h2 style="font-family: var(--font-display); color: var(--neon-cyan); margin-bottom: 1rem;">Snake</h2>
       <div class="game-container">
         <canvas id="snake-canvas" width="400" height="400"></canvas>
+        <div class="mobile-controls" id="snake-mobile-controls">
+          <button type="button" class="ctrl-btn" id="snake-up" aria-label="Up">↑</button>
+          <div style="width: 100%; display: flex; justify-content: center; gap: 0.5rem;">
+            <button type="button" class="ctrl-btn" id="snake-left" aria-label="Left">←</button>
+            <button type="button" class="ctrl-btn" id="snake-down" aria-label="Down">↓</button>
+            <button type="button" class="ctrl-btn" id="snake-right" aria-label="Right">→</button>
+          </div>
+        </div>
         <p class="game-score"><strong>Score:</strong> <span id="snake-score">0</span></p>
         <div class="game-controls">
           <button type="button" class="btn btn-primary" id="snake-start">Start</button>
@@ -208,6 +216,10 @@
       <h2 style="font-family: var(--font-display); color: var(--neon-cyan); margin-bottom: 1rem;">Car Racing</h2>
       <div class="game-container">
         <canvas id="racing-canvas" width="400" height="500"></canvas>
+        <div class="mobile-controls" id="racing-mobile-controls">
+          <button type="button" class="ctrl-btn" id="racing-left" aria-label="Left">←</button>
+          <button type="button" class="ctrl-btn" id="racing-right" aria-label="Right">→</button>
+        </div>
         <p class="game-score"><strong>Score:</strong> <span id="racing-score">0</span></p>
         <div class="game-controls">
           <button type="button" class="btn btn-primary" id="racing-start">Start</button>
@@ -250,6 +262,11 @@
       <h2 style="font-family: var(--font-display); color: var(--neon-cyan); margin-bottom: 1rem;">Character Adventure</h2>
       <div class="game-container">
         <canvas id="adventure-canvas" width="400" height="400"></canvas>
+        <div class="mobile-controls" id="adventure-mobile-controls">
+          <button type="button" class="ctrl-btn" id="adventure-left" aria-label="Left">←</button>
+          <button type="button" class="ctrl-btn" id="adventure-jump" aria-label="Jump">↑ Jump</button>
+          <button type="button" class="ctrl-btn" id="adventure-right" aria-label="Right">→</button>
+        </div>
         <p class="game-score"><strong>Score:</strong> <span id="adventure-score">0</span></p>
         <div class="game-controls">
           <button type="button" class="btn btn-primary" id="adventure-start">Start</button>
@@ -271,6 +288,12 @@
       <h2 style="font-family: var(--font-display); color: var(--neon-cyan); margin-bottom: 1rem;">Tetris</h2>
       <div class="game-container">
         <canvas id="tetris-canvas" width="200" height="400"></canvas>
+        <div class="mobile-controls" id="tetris-mobile-controls">
+          <button type="button" class="ctrl-btn" id="tetris-left" aria-label="Left">←</button>
+          <button type="button" class="ctrl-btn" id="tetris-rotate" aria-label="Rotate">↻</button>
+          <button type="button" class="ctrl-btn" id="tetris-right" aria-label="Right">→</button>
+          <button type="button" class="ctrl-btn" id="tetris-drop" aria-label="Drop">↓</button>
+        </div>
         <p class="game-score"><strong>Score:</strong> <span id="tetris-score">0</span> &nbsp; <strong>Level:</strong> <span id="tetris-level">1</span></p>
         <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">← → move &nbsp; ↑ rotate &nbsp; ↓ soft drop &nbsp; Space hard drop</p>
         <div class="game-controls">
@@ -372,9 +395,17 @@
         var card = e.target.closest('.game-card');
         if (card && card.dataset.game) {
           e.preventDefault();
+          e.stopPropagation();
           showGame(card.dataset.game);
         }
       });
+      document.getElementById('games-grid').addEventListener('touchend', function (e) {
+        var card = e.target.closest('.game-card');
+        if (card && card.dataset.game) {
+          e.preventDefault();
+          showGame(card.dataset.game);
+        }
+      }, { passive: false });
 
       if (backBtn) backBtn.addEventListener('click', showList);
 

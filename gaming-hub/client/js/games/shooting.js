@@ -53,13 +53,13 @@
     loop = requestAnimationFrame(tick);
   }
 
-  canvas.addEventListener('click', (e) => {
+  function handleHit(clientX, clientY) {
     if (!running) return;
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
-    const x = (e.clientX - rect.left) * scaleX;
-    const y = (e.clientY - rect.top) * scaleY;
+    const x = (clientX - rect.left) * scaleX;
+    const y = (clientY - rect.top) * scaleY;
     for (let i = targets.length - 1; i >= 0; i--) {
       const t = targets[i];
       const dx = x - t.x, dy = y - t.y;
@@ -70,7 +70,17 @@
         break;
       }
     }
+  }
+  canvas.addEventListener('click', (e) => {
+    handleHit(e.clientX, e.clientY);
   });
+  canvas.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    if (e.changedTouches && e.changedTouches[0]) {
+      const t = e.changedTouches[0];
+      handleHit(t.clientX, t.clientY);
+    }
+  }, { passive: false });
 
   function start() {
     if (loop) cancelAnimationFrame(loop);

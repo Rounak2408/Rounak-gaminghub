@@ -118,4 +118,31 @@
   document.getElementById('adventure-start').addEventListener('click', start);
   document.getElementById('adventure-restart').addEventListener('click', start);
   document.getElementById('adventure-overlay-restart').addEventListener('click', () => { overlay.style.display = 'none'; start(); });
+
+  var advLeft = document.getElementById('adventure-left');
+  var advRight = document.getElementById('adventure-right');
+  var advJump = document.getElementById('adventure-jump');
+  if (advLeft) {
+    advLeft.addEventListener('mousedown', () => keys.left = true);
+    advLeft.addEventListener('mouseup', () => keys.left = false);
+    advLeft.addEventListener('mouseleave', () => keys.left = false);
+    advLeft.addEventListener('touchstart', (e) => { e.preventDefault(); keys.left = true; });
+    advLeft.addEventListener('touchend', (e) => { e.preventDefault(); keys.left = false; });
+  }
+  if (advRight) {
+    advRight.addEventListener('mousedown', () => keys.right = true);
+    advRight.addEventListener('mouseup', () => keys.right = false);
+    advRight.addEventListener('mouseleave', () => keys.right = false);
+    advRight.addEventListener('touchstart', (e) => { e.preventDefault(); keys.right = true; });
+    advRight.addEventListener('touchend', (e) => { e.preventDefault(); keys.right = false; });
+  }
+  if (advJump) {
+    advJump.addEventListener('click', function () {
+      if (running && player.vy === 0) player.vy = jump;
+    });
+    advJump.addEventListener('touchend', function (e) {
+      e.preventDefault();
+      if (running && player.vy === 0) player.vy = jump;
+    });
+  }
 })();

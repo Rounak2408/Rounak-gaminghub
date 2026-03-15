@@ -139,4 +139,17 @@
   document.getElementById('snake-start').addEventListener('click', start);
   document.getElementById('snake-restart').addEventListener('click', start);
   document.getElementById('snake-overlay-restart').addEventListener('click', () => { overlay.style.display = 'none'; start(); });
+
+  ['snake-up', 'snake-down', 'snake-left', 'snake-right'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('click', function () {
+      if (!running) return;
+      if (id === 'snake-up' && dir.y !== 1) dir = { x: 0, y: -1 };
+      if (id === 'snake-down' && dir.y !== -1) dir = { x: 0, y: 1 };
+      if (id === 'snake-left' && dir.x !== 1) dir = { x: -1, y: 0 };
+      if (id === 'snake-right' && dir.x !== -1) dir = { x: 1, y: 0 };
+    });
+    el.addEventListener('touchend', function (e) { e.preventDefault(); });
+  });
 })();
