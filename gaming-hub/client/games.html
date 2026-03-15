@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Games - Mini Games Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="loading-screen" class="loading-screen">
+    <h1>Rounak Hub</h1>
+    <div class="loading-bar"><div class="loading-bar-inner"></div></div>
+  </div>
+
+  <div id="hub-toast" class="hub-toast" style="display: none;" aria-hidden="true">
+    <div class="hub-toast-backdrop"></div>
+    <div class="hub-toast-box">
+      <p class="hub-toast-brand">Rounak Hub</p>
+      <p class="hub-toast-message" id="hub-toast-message"></p>
+      <button type="button" class="btn btn-primary hub-toast-ok" id="hub-toast-ok">OK</button>
+    </div>
+  </div>
+
+  <nav class="navbar" id="main-nav">
+    <div class="container nav-container">
+      <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+      <a href="index.html" class="nav-brand">Rounak Hub</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="games.html" class="active">Games</a></li>
+        <li><a href="leaderboard.html">Leaderboard</a></li>
+        <li><span class="user-badge" id="nav-user"></span></li>
+        <li><a href="login.html" id="nav-login">Login</a></li>
+        <li><a href="register.html" id="nav-register">Register</a></li>
+        <li><button type="button" class="btn btn-secondary" id="nav-logout" style="display:none" onclick="logout()">Logout</button></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="page-content container">
+    <!-- View 1: List of game cards - show by default -->
+    <div id="game-list-view">
+      <section class="hero">
+        <h1>Play Games</h1>
+        <p>Choose a game below. Start, play, and submit your score when logged in.</p>
+      </section>
+      <div class="games-grid" id="games-grid">
+        <a href="#" class="game-card" data-game="tic-tac-toe">
+          <div class="icon">⭕</div>
+          <h3>Tic Tac Toe</h3>
+          <p>Classic X and O</p>
+        </a>
+        <a href="#" class="game-card" data-game="snake">
+          <div class="icon">🐍</div>
+          <h3>Snake</h3>
+          <p>Eat and grow</p>
+        </a>
+        <a href="#" class="game-card" data-game="rps">
+          <div class="icon">✊</div>
+          <h3>Rock Paper Scissors</h3>
+          <p>Best of rounds</p>
+        </a>
+        <a href="#" class="game-card" data-game="racing">
+          <div class="icon">🏎️</div>
+          <h3>Car Racing</h3>
+          <p>Dodge and survive</p>
+        </a>
+        <a href="#" class="game-card" data-game="shooting">
+          <div class="icon">🎯</div>
+          <h3>Shooting Game</h3>
+          <p>Hit the targets</p>
+        </a>
+        <a href="#" class="game-card" data-game="adventure">
+          <div class="icon">🧙</div>
+          <h3>Character Adventure</h3>
+          <p>Jump and collect</p>
+        </a>
+        <a href="#" class="game-card" data-game="tetris">
+          <div class="icon">📦</div>
+          <h3>Tetris</h3>
+          <p>Classic falling blocks</p>
+        </a>
+        <a href="#" class="game-card" data-game="countmasters">
+          <div class="icon">🏃</div>
+          <h3>Count Masters</h3>
+          <p>Stickman crowd & gates</p>
+        </a>
+        <a href="#" class="game-card" data-game="mountain-bike">
+          <div class="icon">🚵</div>
+          <h3>Mountain Bike</h3>
+          <p>3D downhill ride</p>
+        </a>
+      </div>
+    </div>
+
+    <!-- View 2: Single game - hidden by default, show only selected game -->
+    <div id="game-single-view" style="display: none;">
+      <div class="back-to-games-bar">
+        <button type="button" class="btn btn-secondary" id="back-to-games">← All Games</button>
+      </div>
+      <div id="game-single-container">
+        <!-- 1. Tic Tac Toe -->
+        <section class="game-section" id="tic-tac-toe" style="display: none;">
+      <h2 style="font-family: var(--font-display); color: var(--neon-cyan); margin-bottom: 1rem;">Tic Tac Toe</h2>
+      <div class="game-container">
+        <p class="mp-label" style="margin-bottom: 0.5rem;">Play alone or with a friend online:</p>
+        <div id="ttt-mode-bar" style="margin-bottom: 0.5rem;">
+          <button type="button" class="btn btn-secondary btn-sm" id="ttt-btn-solo">Solo</button>
+          <button type="button" class="btn btn-secondary btn-sm" id="ttt-btn-online">2P Online</button>
+        </div>
+        <div id="ttt-online-panel" style="margin-bottom: 0.75rem; padding: 0.75rem; background: rgba(0,0,0,0.35); border: 1px solid rgba(0,245,255,0.25); border-radius: 8px;">
+          <p class="mp-label" style="margin-bottom: 0.5rem;">Play with friend:</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+            <button type="button" class="btn btn-primary" id="ttt-create-room">Create Room</button>
+            <button type="button" class="btn btn-secondary" id="ttt-join-room">Join Room</button>
+          </div>
+          <div id="ttt-create-view" style="display: none; margin-top: 0.75rem; padding-top: 0.5rem; border-top: 1px solid rgba(0,245,255,0.2);">
+            <p class="mp-label" style="margin-bottom: 0.35rem;">Room ID (apna naam ya number daalo):</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
+              <input type="text" id="ttt-create-code-input" placeholder="e.g. Rounak ya 9876543210" maxlength="20" style="width: 180px; padding: 0.5rem; border-radius: 6px; border: 1px solid rgba(0,245,255,0.4); background: rgba(0,0,0,0.4); color: #eee;">
+              <button type="button" class="btn btn-primary" id="ttt-do-create">Create</button>
+            </div>
+            <p id="ttt-create-err" class="mp-error" style="display: none;"></p>
+            <div id="ttt-room-created" style="display: none;">
+              <span class="mp-label">Share this Room ID: </span><strong id="ttt-room-code" style="color: var(--neon-cyan); font-size: 1.2rem;"></strong>
+              <button type="button" class="btn btn-secondary btn-sm" id="ttt-copy-code" style="margin-left: 0.5rem;">Copy</button>
+              <p class="mp-waiting" style="margin-top: 0.35rem;">Waiting for friend to join...</p>
+            </div>
+          </div>
+          <div id="ttt-join-view" style="display: none; margin-top: 0.75rem; padding-top: 0.5rem; border-top: 1px solid rgba(0,245,255,0.2);">
+            <p class="mp-label" style="margin-bottom: 0.35rem;">Friend ka Room ID daalo (naam ya number):</p>
+            <input type="text" id="ttt-code-input" placeholder="e.g. Rounak ya 9876543210" maxlength="20" style="width: 180px; padding: 0.5rem; margin-right: 0.5rem; margin-bottom: 0.35rem; border-radius: 6px; border: 1px solid rgba(0,245,255,0.4); background: rgba(0,0,0,0.4); color: #eee;">
+            <button type="button" class="btn btn-primary btn-sm" id="ttt-do-join">Join</button>
+            <p id="ttt-join-err" class="mp-error" style="display: none;"></p>
+          </div>
+        </div>
+        <div id="ttt-board" class="ttt-board"></div>
+        <p class="game-score"><strong>Score (Wins):</strong> <span id="ttt-score">0</span> <span id="ttt-turn-msg" style="margin-left: 1rem; color: var(--neon-cyan);"></span></p>
+        <div class="game-controls">
+          <button type="button" class="btn btn-primary" id="ttt-start">Start</button>
+          <button type="button" class="btn btn-secondary" id="ttt-restart">Restart</button>
+        </div>
+      </div>
+      <div class="game-overlay" id="ttt-overlay" style="display:none">
+        <div class="game-overlay-content">
+          <h2>Game Over</h2>
+          <p class="score-display">Wins: <span id="ttt-final-score">0</span></p>
+          <button type="button" class="btn btn-primary" id="ttt-overlay-restart">Restart</button>
+          <button type="button" class="btn btn-secondary game-overlay-exit">Exit</button>
+        </div>
+      </div>
+        </section>
+
+        <!-- 2. Snake -->
+        <section class="game-section" id="snake" style="display: none;">
+      <h2 style="font-family: var(--font-display); color: var(--neon-cyan); margin-bottom: 1rem;">Snake</h2>
+      <div class="game-container">
+        <canvas id="snake-canvas" width="400" height="400"></canvas>
+        <p class="game-score"><strong>Score:</strong> <span id="snake-score">0</span></p>
+        <div class="game-controls">
+          <button type="button" class="btn btn-primary" id="snake-start">Start</button>
+          <button type="button" class="btn btn-secondary" id="snake-restart">Restart</button>
+        </div>
+      </div>
+      <div class="game-overlay" id="snake-overlay" style="display:none">
+        <div class="game-overlay-content">
+          <h2>Game Over</h2>
+          <p class="score-display">Score: <span id="snake-final-score">0</span></p>
+          <button type="button" class="btn btn-primary" id="snake-overlay-restart">Restart</button>
+          <button type="button" class="btn btn-secondary game-overlay-exit">Exit</button>
+        </div>
+      </div>
+        </section>
+
+        <!-- 3. Rock Paper Scissors -->
+        <section class="game-section" id="rps" style="display: none;">
+      <h2 style="font-family: var(--font-display); color: var(--neon-cyan); margin-bottom: 1rem;">Rock Paper Scissors</h2>
+      <div class="game-container">
+        <div id="rps-area">
+          <p id="rps-message">Click Start to play. First to 3 wins!</p>
+          <div id="rps-choices" style="display:none; gap: 1rem; flex-wrap: wrap; justify-content: center; margin: 1rem 0;">
+            <button type="button" class="btn btn-secondary rps-btn" data-choice="rock">Rock</button>
+            <button type="button" class="btn btn-secondary rps-btn" data-choice="paper">Paper</button>
+            <button type="button" class="btn btn-secondary rps-btn" data-choice="scissors">Scissors</button>
+          </div>
+        </div>
+        <p class="game-score"><strong>Wins:</strong> <span id="rps-score">0</span> / 3</p>
+        <div class="game-controls">
+          <button type="button" class="btn btn-primary" id="rps-start">Start</button>
+          <button type="button" class="btn btn-secondary" id="rps-restart">Restart</button>
+        </div>
+      </div>
+      <div class="game-overlay" id="rps-overlay" style="display:none">
+        <div class="game-overlay-content">
+          <h2>Game Over</h2>
+          <p class="score-display" id="rps-result">You won!</p>
+          <button type="button" class="btn btn-primary" id="rps-overlay-restart">Restart</button>
+          <button type="button" class="btn btn-secondary game-overlay-exit">Exit</button>
+        </div>
+      </div>
+        </section>
+
+        <!-- 4. Car Racing -->
+        <section class="game-section" id="racing" style="display: none;">
+      <h2 style="font-family: var(--font-display); color: var(--neon-cyan); margin-bottom: 1rem;">Car Racing</h2>
+      <div class="game-container">
+        <canvas id="racing-canvas" width="400" height="500"></canvas>
+        <p class="game-score"><strong>Score:</strong> <span id="racing-score">0</span></p>
+        <div class="game-controls">
+          <button type="button" class="btn btn-primary" id="racing-start">Start</button>
+          <button type="button" class="btn btn-secondary" id="racing-restart">Restart</button>
+        </div>
+      </div>
+      <div class="game-overlay" id="racing-overlay" style="display:none">
+        <div class="game-overlay-content">
+          <h2>Game Over</h2>
+          <p class="score-display">Score: <span id="racing-final-score">0</span></p>
+          <button type="button" class="btn btn-primary" id="racing-overlay-restart">Restart</button>
+          <button type="button" class="btn btn-secondary game-overlay-exit">Exit</button>
+        </div>
+      </div>
+        </section>
+
+        <!-- 5. Shooting Game -->
+        <section class="game-section" id="shooting" style="display: none;">
+      <h2 style="font-family: var(--font-display); color: var(--neon-cyan); margin-bottom: 1rem;">Shooting Game</h2>
+      <div class="game-container">
+        <canvas id="shooting-canvas" width="400" height="400"></canvas>
+        <p class="game-score"><strong>Score:</strong> <span id="shooting-score">0</span></p>
+        <div class="game-controls">
+          <button type="button" class="btn btn-primary" id="shooting-start">Start</button>
+          <button type="button" class="btn btn-secondary" id="shooting-restart">Restart</button>
+        </div>
+      </div>
+      <div class="game-overlay" id="shooting-overlay" style="display:none">
+        <div class="game-overlay-content">
+          <h2>Game Over</h2>
+          <p class="score-display">Score: <span id="shooting-final-score">0</span></p>
+          <button type="button" class="btn btn-primary" id="shooting-overlay-restart">Restart</button>
+          <button type="button" class="btn btn-secondary game-overlay-exit">Exit</button>
+        </div>
+      </div>
+        </section>
+
+        <!-- 6. Character Adventure -->
+        <section class="game-section" id="adventure" style="display: none;">
+      <h2 style="font-family: var(--font-display); color: var(--neon-cyan); margin-bottom: 1rem;">Character Adventure</h2>
+      <div class="game-container">
+        <canvas id="adventure-canvas" width="400" height="400"></canvas>
+        <p class="game-score"><strong>Score:</strong> <span id="adventure-score">0</span></p>
+        <div class="game-controls">
+          <button type="button" class="btn btn-primary" id="adventure-start">Start</button>
+          <button type="button" class="btn btn-secondary" id="adventure-restart">Restart</button>
+        </div>
+      </div>
+      <div class="game-overlay" id="adventure-overlay" style="display:none">
+        <div class="game-overlay-content">
+          <h2>Game Over</h2>
+          <p class="score-display">Score: <span id="adventure-final-score">0</span></p>
+          <button type="button" class="btn btn-primary" id="adventure-overlay-restart">Restart</button>
+          <button type="button" class="btn btn-secondary game-overlay-exit">Exit</button>
+        </div>
+      </div>
+        </section>
+
+        <!-- 7. Tetris -->
+        <section class="game-section" id="tetris" style="display: none;">
+      <h2 style="font-family: var(--font-display); color: var(--neon-cyan); margin-bottom: 1rem;">Tetris</h2>
+      <div class="game-container">
+        <canvas id="tetris-canvas" width="200" height="400"></canvas>
+        <p class="game-score"><strong>Score:</strong> <span id="tetris-score">0</span> &nbsp; <strong>Level:</strong> <span id="tetris-level">1</span></p>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">← → move &nbsp; ↑ rotate &nbsp; ↓ soft drop &nbsp; Space hard drop</p>
+        <div class="game-controls">
+          <button type="button" class="btn btn-primary" id="tetris-start">Start</button>
+          <button type="button" class="btn btn-secondary" id="tetris-restart">Restart</button>
+        </div>
+      </div>
+      <div class="game-overlay" id="tetris-overlay" style="display:none">
+        <div class="game-overlay-content">
+          <h2>Game Over</h2>
+          <p class="score-display">Score: <span id="tetris-final-score">0</span></p>
+          <button type="button" class="btn btn-primary" id="tetris-overlay-restart">Restart</button>
+          <button type="button" class="btn btn-secondary game-overlay-exit">Exit</button>
+        </div>
+      </div>
+        </section>
+
+        <!-- 8. Count Masters -->
+        <section class="game-section" id="countmasters" style="display: none;">
+      <h2 style="font-family: var(--font-display); color: var(--neon-cyan); margin-bottom: 1rem;">Count Masters: Stickman Games</h2>
+      <div class="game-container game-container-countmasters">
+        <div class="game-screen-wrap">
+          <canvas id="countmasters-canvas" width="400" height="320"></canvas>
+        </div>
+        <p class="game-score"><strong>Crowd:</strong> <span id="countmasters-score">0</span></p>
+        <p class="game-hint">Run through gates: x2, +10 multiply or add. Avoid - gates. Reach END!</p>
+        <div class="game-controls">
+          <button type="button" class="btn btn-primary" id="countmasters-start">Start</button>
+          <button type="button" class="btn btn-secondary" id="countmasters-restart">Restart</button>
+        </div>
+      </div>
+      <div class="game-overlay" id="countmasters-overlay" style="display:none">
+        <div class="game-overlay-content">
+          <h2>Game Over</h2>
+          <p class="score-display">Score: <span id="countmasters-final-score">0</span></p>
+          <button type="button" class="btn btn-primary" id="countmasters-overlay-restart">Restart</button>
+          <button type="button" class="btn btn-secondary game-overlay-exit">Exit</button>
+        </div>
+      </div>
+        </section>
+
+        <!-- 9. Mountain Bike (3D - external) -->
+        <section class="game-section" id="mountain-bike" style="display: none;">
+          <h2 style="font-family: var(--font-display); color: var(--neon-cyan); margin-bottom: 1rem;">Mountain Bike – Downhill Ride</h2>
+          <div class="game-container" style="max-width: 900px;">
+            <p style="color: var(--text-muted); margin-bottom: 0.5rem;">W/Up: forward · A/D: turn · Space: jump. Choose Mountain Ride or Free Ride from the in-game menu.</p>
+            <div class="game-screen-wrap" style="aspect-ratio: 16/10; min-height: 400px; background: #0a0a0f; border-radius: 8px; overflow: hidden;">
+              <iframe id="mountain-bike-iframe" src="mountain-bike/index.html" style="width:100%; height:100%; border: none;" title="Mountain Bike Game"></iframe>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <footer style="margin-top: 2rem;">
+      <div class="container">Rounak Gaming Hub @2026</div>
+    </footer>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/loading.js"></script>
+  <script src="js/mobile-nav.js"></script>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="js/games/tictactoe.js"></script>
+  <script src="js/games/snake.js"></script>
+  <script src="js/games/rps.js"></script>
+  <script src="js/games/racing.js"></script>
+  <script src="js/games/shooting.js"></script>
+  <script src="js/games/adventure.js"></script>
+  <script src="js/games/tetris.js"></script>
+  <script src="js/games/countmasters.js"></script>
+  <script src="js/games/submit-score.js"></script>
+  <script>
+    (function () {
+      var listView = document.getElementById('game-list-view');
+      var singleView = document.getElementById('game-single-view');
+      var container = document.getElementById('game-single-container');
+      var backBtn = document.getElementById('back-to-games');
+      var gameIds = ['tic-tac-toe', 'snake', 'rps', 'racing', 'shooting', 'adventure', 'tetris', 'countmasters', 'mountain-bike'];
+
+      function showGame(id) {
+        if (!id || !gameIds.includes(id)) return;
+        listView.style.display = 'none';
+        singleView.style.display = 'flex';
+        container.querySelectorAll('.game-section').forEach(function (el) {
+          el.style.display = el.id === id ? 'block' : 'none';
+        });
+        window.location.hash = id;
+      }
+
+      function showList() {
+        singleView.style.display = 'none';
+        listView.style.display = 'block';
+        window.location.hash = '';
+      }
+
+      document.getElementById('games-grid').addEventListener('click', function (e) {
+        var card = e.target.closest('.game-card');
+        if (card && card.dataset.game) {
+          e.preventDefault();
+          showGame(card.dataset.game);
+        }
+      });
+
+      if (backBtn) backBtn.addEventListener('click', showList);
+
+      document.querySelectorAll('.game-overlay-exit').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          document.querySelectorAll('.game-overlay').forEach(function (ov) { ov.style.display = 'none'; });
+          showList();
+        });
+      });
+
+      if (window.location.hash) {
+        var id = window.location.hash.slice(1);
+        if (gameIds.includes(id)) showGame(id);
+      }
+      window.addEventListener('hashchange', function () {
+        if (!window.location.hash) showList();
+        else if (gameIds.includes(window.location.hash.slice(1))) showGame(window.location.hash.slice(1));
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+# Render.com – one-click deploy (optional)
+# Dashboard se bhi deploy kar sakte ho; is file se blueprint deploy use karo
+services:
+  - type: web
+    name: rounak-gaming-hub
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: NODE_ENV
+        value: production

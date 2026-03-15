@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaderboard - Mini Games Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="loading-screen" class="loading-screen">
+    <h1>Rounak Hub</h1>
+    <div class="loading-bar"><div class="loading-bar-inner"></div></div>
+  </div>
+
+  <nav class="navbar" id="main-nav">
+    <div class="container nav-container">
+      <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+      <a href="index.html" class="nav-brand">Rounak Hub</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="games.html">Games</a></li>
+        <li><a href="leaderboard.html" class="active">Leaderboard</a></li>
+        <li><span class="user-badge" id="nav-user"></span></li>
+        <li><a href="login.html" id="nav-login">Login</a></li>
+        <li><a href="register.html" id="nav-register">Register</a></li>
+        <li><button type="button" class="btn btn-secondary" id="nav-logout" style="display:none" onclick="logout()">Logout</button></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="page-content">
+    <section class="hero">
+      <div class="container">
+        <h1>Leaderboard</h1>
+        <p>Top scores across all games. Log in and submit your scores to appear here.</p>
+      </div>
+    </section>
+
+    <section class="leaderboard-section container">
+      <div class="leaderboard-controls">
+        <label for="game-filter">Game:</label>
+        <select id="game-filter">
+          <option value="">All Games</option>
+          <option value="Tic Tac Toe">Tic Tac Toe</option>
+          <option value="Snake">Snake</option>
+          <option value="Rock Paper Scissors">Rock Paper Scissors</option>
+          <option value="Car Racing">Car Racing</option>
+          <option value="Shooting Game">Shooting Game</option>
+          <option value="Character Adventure">Character Adventure</option>
+          <option value="Tetris">Tetris</option>
+          <option value="Count Masters">Count Masters</option>
+        </select>
+        <button type="button" class="btn btn-primary" id="refresh-leaderboard">Refresh</button>
+      </div>
+      <div class="leaderboard-table-wrap">
+        <table class="leaderboard-table">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Username</th>
+              <th>Game</th>
+              <th>Score</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-body">
+            <tr><td colspan="4" class="leaderboard-empty">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">Rounak Gaming Hub @2026</div>
+    </footer>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/loading.js"></script>
+  <script src="js/mobile-nav.js"></script>
+  <script>
+    const tbody = document.getElementById('leaderboard-body');
+    const gameFilter = document.getElementById('game-filter');
+    const refreshBtn = document.getElementById('refresh-leaderboard');
+
+    function renderLeaderboard(list) {
+      if (!list || list.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="leaderboard-empty">No scores yet. Play games and submit your score!</td></tr>';
+        return;
+      }
+      tbody.innerHTML = list.map((row, i) => {
+        const rankClass = row.rank <= 3 ? `rank-${row.rank}` : '';
+        return `<tr>
+          <td class="rank ${rankClass}">#${row.rank}</td>
+          <td>${escapeHtml(row.username || 'Anonymous')}</td>
+          <td>${escapeHtml(row.gameName)}</td>
+          <td>${row.score}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    function escapeHtml(s) {
+      const div = document.createElement('div');
+      div.textContent = s;
+      return div.innerHTML;
+    }
+
+    async function loadLeaderboard() {
+      tbody.innerHTML = '<tr><td colspan="4" class="leaderboard-empty">Loading...</td></tr>';
+      try {
+        const game = gameFilter.value || undefined;
+        const data = await apiLeaderboard(game);
+        renderLeaderboard(data);
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="4" class="leaderboard-empty">${escapeHtml(err.message)}</td></tr>`;
+      }
+    }
+
+    gameFilter.addEventListener('change', loadLeaderboard);
+    refreshBtn.addEventListener('click', loadLeaderboard);
+    document.addEventListener('DOMContentLoaded', loadLeaderboard);
+  </script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mountain Bike - Downhill Ride</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-menu">
+    <div class="menu-content" id="main-menu">
+      <h1 class="menu-title">Mountain Bike</h1>
+      <p class="menu-subtitle">Downhill Master</p>
+      <div class="menu-buttons">
+        <button type="button" class="menu-btn" id="btn-mountain-ride">Mountain Ride</button>
+        <button type="button" class="menu-btn" id="btn-free-ride">Free Ride</button>
+        <button type="button" class="menu-btn menu-btn-online" id="btn-2p-online">2 Player Online</button>
+        <button type="button" class="menu-btn menu-btn-shop" id="btn-shop">Shop</button>
+      </div>
+    </div>
+    <div class="menu-content multiplayer-panel" id="multiplayer-panel" style="display: none;">
+      <h2 class="menu-subtitle" style="margin-bottom: 1rem;">Play with Friend</h2>
+      <div class="menu-buttons">
+        <button type="button" class="menu-btn" id="btn-create-room">Create Room</button>
+        <button type="button" class="menu-btn" id="btn-join-room">Join Room</button>
+        <button type="button" class="menu-btn menu-btn-shop" id="btn-back-mp">Back</button>
+      </div>
+      <div id="mp-create-view" style="display: none; margin-top: 1.5rem;">
+        <p class="mp-label">Share this code with your friend:</p>
+        <p id="room-code-display" class="room-code"></p>
+        <button type="button" class="menu-btn" id="btn-copy-code" style="margin-top: 0.5rem;">Copy Code</button>
+        <p class="mp-waiting">Waiting for friend to join...</p>
+      </div>
+      <div id="mp-join-view" style="display: none; margin-top: 1.5rem;">
+        <label class="mp-label">Enter room code:</label>
+        <input type="text" id="room-code-input" class="room-code-input" maxlength="6" placeholder="ABC123">
+        <button type="button" class="menu-btn" id="btn-do-join" style="margin-top: 0.5rem;">Join</button>
+        <p id="mp-join-error" class="mp-error" style="display: none;"></p>
+      </div>
+    </div>
+  </div>
+
+  <div id="game-ui" style="display: none;">
+    <div id="hud">
+      <div class="hud-score">Distance: <span id="score-value">0</span> m</div>
+    </div>
+    <button type="button" id="btn-pause">II</button>
+  </div>
+
+  <div id="game-canvas-wrap" style="display: none;">
+    <canvas id="game-canvas"></canvas>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="terrain.js"></script>
+  <script src="bike.js"></script>
+  <script src="multiplayer.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini Games Hub - Home</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="loading-screen" class="loading-screen">
+    <h1>Rounak Hub</h1>
+    <div class="loading-bar"><div class="loading-bar-inner"></div></div>
+  </div>
+
+  <nav class="navbar" id="main-nav">
+    <div class="container nav-container">
+      <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+      <a href="index.html" class="nav-brand">Rounak Hub</a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="games.html">Games</a></li>
+        <li><a href="leaderboard.html">Leaderboard</a></li>
+        <li><span class="user-badge" id="nav-user"></span></li>
+        <li><a href="login.html" id="nav-login">Login</a></li>
+        <li><a href="register.html" id="nav-register">Register</a></li>
+        <li><button type="button" class="btn btn-secondary" id="nav-logout" style="display:none" onclick="logout()">Logout</button></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="page-content">
+    <section class="hero">
+      <div class="container">
+        <h1>Online Mini Games Hub</h1>
+        <p>Play classic arcade games, beat high scores, and climb the leaderboard. Dark theme, neon vibes, endless fun.</p>
+        <a href="games.html" class="btn btn-primary">Play Games</a>
+      </div>
+    </section>
+
+    <section class="container">
+      <h2 style="font-family: var(--font-display); color: var(--neon-cyan); margin: 2rem 0 1rem; text-align: center;">Featured Games</h2>
+      <div class="games-grid">
+        <a href="games.html#tic-tac-toe" class="game-card">
+          <div class="icon">⭕</div>
+          <h3>Tic Tac Toe</h3>
+          <p>Classic X and O</p>
+        </a>
+        <a href="games.html#snake" class="game-card">
+          <div class="icon">🐍</div>
+          <h3>Snake</h3>
+          <p>Eat and grow</p>
+        </a>
+        <a href="games.html#rps" class="game-card">
+          <div class="icon">✊</div>
+          <h3>Rock Paper Scissors</h3>
+          <p>Best of rounds</p>
+        </a>
+        <a href="games.html#racing" class="game-card">
+          <div class="icon">🏎️</div>
+          <h3>Car Racing</h3>
+          <p>Dodge and survive</p>
+        </a>
+        <a href="games.html#shooting" class="game-card">
+          <div class="icon">🎯</div>
+          <h3>Shooting Game</h3>
+          <p>Hit the targets</p>
+        </a>
+        <a href="games.html#adventure" class="game-card">
+          <div class="icon">🧙</div>
+          <h3>Character Adventure</h3>
+          <p>Jump and collect</p>
+        </a>
+        <a href="games.html#tetris" class="game-card">
+          <div class="icon">📦</div>
+          <h3>Tetris</h3>
+          <p>Classic falling blocks</p>
+        </a>
+        <a href="games.html#countmasters" class="game-card">
+          <div class="icon">🏃</div>
+          <h3>Count Masters</h3>
+          <p>Stickman crowd & gates</p>
+        </a>
+        <a href="games.html#mountain-bike" class="game-card">
+          <div class="icon">🚵</div>
+          <h3>Mountain Bike</h3>
+          <p>3D downhill ride</p>
+        </a>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">Rounak Gaming Hub @2026</div>
+    </footer>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/loading.js"></script>
+  <script src="js/mobile-nav.js"></script>
+</body>
+</html>

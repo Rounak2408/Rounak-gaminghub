@@ -1,0 +1,9 @@
+{
+  "name": "final-project",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "npm start --prefix gaming-hub",
+    "dev": "npm run dev --prefix gaming-hub"
+  }
+}
